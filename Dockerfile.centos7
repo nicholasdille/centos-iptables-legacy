@@ -17,5 +17,5 @@ RUN ./autogen.sh \
  && make LDFLAGS="-static" \
  && make install
 
-FROM centos:8
+FROM scratch
 COPY --from=build /usr/local /usr/local

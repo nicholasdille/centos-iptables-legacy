@@ -30,7 +30,7 @@ jobs:
 
       - name: Create release asset
         run: |
-          tar -cvzf iptables-centos7.tar.gz usr/local
+          tar -cvzf iptables-centos7.tar.gz  -C usr/local .
       
       - name: Create checksum
         run: |
@@ -68,7 +68,7 @@ jobs:
 
       - name: Create release asset
         run: |
-          tar -cvzf iptables-centos8.tar.gz usr/local
+          tar -cvzf iptables-centos8.tar.gz -C usr/local .
       
       - name: Create checksum
         run: |
