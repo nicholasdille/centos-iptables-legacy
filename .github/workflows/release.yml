@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+env:
+  IPTABLES_VERSION: 1.8.7
+
 jobs:
   build-centos7:
     runs-on: ubuntu-latest
@@ -18,15 +21,7 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          docker build . --file Dockerfile.centos7 --output type=local,dest=.
-
-      - name: Get version
-        id: get_version
-        run: |
-          VERSION="$(./usr/local/bin/iptables --version | cut -d' ' -f2 | tr -d v)"
-          test -n "${VERSION}"
-          echo "qemu version ${VERSION}"
-          echo "::set-output name=version::${VERSION}"
+          docker build . --file Dockerfile.centos7 --build-arg IPTABLES_VERSION --output type=local,dest=.
 
       - name: Create release asset
         run: |
@@ -56,15 +51,7 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          docker build . --file Dockerfile.centos8 --output type=local,dest=.
-
-      - name: Get version
-        id: get_version
-        run: |
-          VERSION="$(./usr/local/bin/iptables --version | cut -d' ' -f2 | tr -d v)"
-          test -n "${VERSION}"
-          echo "qemu version ${VERSION}"
-          echo "::set-output name=version::${VERSION}"
+          docker build . --file Dockerfile.centos8 --build-arg IPTABLES_VERSION --output type=local,dest=.
 
       - name: Create release asset
         run: |
@@ -105,8 +92,8 @@ jobs:
         with:
           token: ${{ secrets.BOT_GITHUB_TOKEN }}
           allowUpdates: true
-          name: "iptables ${{ steps.get_version.outputs.version }}"
-          tag: v${{ steps.get_version.outputs.version }}
+          name: "iptables ${{ env.IPTABLES_VERSION }}"
+          tag: v${{ env.IPTABLES_VERSION }}
           draft: false
           omitBody: true
           prerelease: false
