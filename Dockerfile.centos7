@@ -1,0 +1,21 @@
+FROM centos:7 AS build
+
+RUN yum install -y \
+        gcc \
+        gcc-c++ \
+        make \
+        autoconf \
+        automake \
+        libtool \
+        git
+
+ARG IPTABLES_VERSION=1.8.7
+WORKDIR /tmp/iptables
+RUN git clone -q --config advice.detachedHead=false --depth 1 --branch "v${IPTABLES_VERSION}" git://git.netfilter.org/iptables .
+RUN ./autogen.sh \
+ && ./configure --prefix=/usr/local --enable-shared --disable-shared --disable-nftables \
+ && make LDFLAGS="-static" \
+ && make install
+
+FROM centos:8
+COPY --from=build /usr/local /usr/local
