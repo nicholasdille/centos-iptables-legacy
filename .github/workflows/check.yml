@@ -17,9 +17,8 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |
           TEMP=$(mktemp -d) && \
-          cd "${TEMP}" && \
-          git clone -q git://git.netfilter.org/iptables . && \
-          IPTABLES_VERSION="$(git tag | sort -Vr | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$" | head -n 1 | tr -d v)" && \
+          git clone -q git://git.netfilter.org/iptables "${TEMP}" && \
+          IPTABLES_VERSION="$(git -C "${TEMP}" tag | sort -Vr | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+$" | head -n 1 | tr -d v)" && \
           sed -i -E "s/IPTABLES_VERSION: .+$/IPTABLES_VERSION: ${IPTABLES_VERSION}/" .github/workflows/release.yml
 
       - name: Commit
