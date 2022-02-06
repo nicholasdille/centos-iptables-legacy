@@ -26,7 +26,7 @@ jobs:
       - name: Create release asset
         run: |
           tar -cvzf iptables-centos7.tar.gz  -C usr/local .
-      
+
       - name: Create checksum
         run: |
           sha256sum iptables-centos7.tar.gz >iptables-centos7.tar.gz.sha256
@@ -39,51 +39,51 @@ jobs:
             iptables-centos7.tar.gz
             iptables-centos7.tar.gz.sha256
           retention-days: 2
-    
-#  build-centos8:
-#    runs-on: ubuntu-latest
-#    steps:
-#
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#
-#      - name: Build
-#        env:
-#          DOCKER_BUILDKIT: 1
-#        run: |
-#          docker build . --file Dockerfile.centos8 --build-arg IPTABLES_VERSION --output type=local,dest=.
-#
-#      - name: Create release asset
-#        run: |
-#          tar -cvzf iptables-centos8.tar.gz -C usr/local .
-#      
-#      - name: Create checksum
-#        run: |
-#          sha256sum iptables-centos8.tar.gz >iptables-centos8.tar.gz.sha256
-#
-#      - name: Store artifacts
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: iptables-centos8
-#          path: |
-#            iptables-centos8.tar.gz
-#            iptables-centos8.tar.gz.sha256
-#          retention-days: 2
+
+  build-centos8:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        env:
+          DOCKER_BUILDKIT: 1
+        run: |
+          docker build . --file Dockerfile.centos8 --build-arg IPTABLES_VERSION --output type=local,dest=.
+
+      - name: Create release asset
+        run: |
+          tar -cvzf iptables-centos8.tar.gz -C usr/local .
+
+      - name: Create checksum
+        run: |
+          sha256sum iptables-centos8.tar.gz >iptables-centos8.tar.gz.sha256
+
+      - name: Store artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: iptables-centos8
+          path: |
+            iptables-centos8.tar.gz
+            iptables-centos8.tar.gz.sha256
+          retention-days: 2
 
   release:
     runs-on: ubuntu-latest
     needs:
       - build-centos7
-#      - build-centos8
+      - build-centos8
     steps:
 
       - uses: actions/download-artifact@v2
         with:
           name: iptables-centos7
 
-#      - uses: actions/download-artifact@v2
-#        with:
-#          name: iptables-centos8
+      - uses: actions/download-artifact@v2
+        with:
+          name: iptables-centos8
 
       - name: Create release
         id: create_release
@@ -98,5 +98,4 @@ jobs:
           omitBody: true
           prerelease: false
           replacesArtifacts: true
-#          artifacts: iptables-centos7.tar.gz,iptables-centos7.tar.gz.sha256,iptables-centos8.tar.gz,iptables-centos8.tar.gz.sha256
-          artifacts: iptables-centos7.tar.gz,iptables-centos7.tar.gz.sha256
+          artifacts: iptables-centos7.tar.gz,iptables-centos7.tar.gz.sha256,iptables-centos8.tar.gz,iptables-centos8.tar.gz.sha256
