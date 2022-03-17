@@ -79,4 +79,4 @@ jobs:
           omitBody: true
           prerelease: false
           replacesArtifacts: true
-          artifacts: iptables-centos?-*.tar.gz,iptables-centos?-*.tar.gz.sha256
+          artifacts: iptables-centos*.tar.gz,iptables-centos*.tar.gz.sha256
