@@ -14,8 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        centos:
-        - 7
+        rockylinux:
         - 8
         arch:
         - amd64
@@ -36,26 +35,26 @@ jobs:
           DOCKER_BUILDKIT: 1
         run: |
           docker build . \
-              --file Dockerfile.centos${{ matrix.centos }} \
+              --file Dockerfile.rockylinux${{ matrix.rockylinux }} \
               --platform linux/${{ matrix.arch }} \
               --build-arg IPTABLES_VERSION \
               --output type=local,dest=.
 
       - name: Create release asset
         run: |
-          tar -cvzf iptables-centos${{ matrix.centos }}-${{ matrix.arch }}.tar.gz  -C usr/local .
+          tar -cvzf iptables-rockylinux${{ matrix.rockylinux }}-${{ matrix.arch }}.tar.gz  -C usr/local .
 
       - name: Create checksum
         run: |
-          sha256sum iptables-centos${{ matrix.centos }}-${{ matrix.arch }}.tar.gz >iptables-centos${{ matrix.centos }}-${{ matrix.arch }}.tar.gz.sha256
+          sha256sum iptables-rockylinux${{ matrix.rockylinux }}-${{ matrix.arch }}.tar.gz >iptables-rockylinux${{ matrix.rockylinux }}-${{ matrix.arch }}.tar.gz.sha256
 
       - name: Store artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: iptables-centos${{ matrix.centos }}
+          name: iptables-rockylinux${{ matrix.rockylinux }}
           path: |
-            iptables-centos${{ matrix.centos }}-${{ matrix.arch }}.tar.gz
-            iptables-centos${{ matrix.centos }}-${{ matrix.arch }}.tar.gz.sha256
+            iptables-rockylinux${{ matrix.rockylinux }}-${{ matrix.arch }}.tar.gz
+            iptables-rockylinux${{ matrix.rockylinux }}-${{ matrix.arch }}.tar.gz.sha256
           retention-days: 2
 
   release:
@@ -79,4 +78,4 @@ jobs:
           omitBody: true
           prerelease: false
           replacesArtifacts: true
-          artifacts: "*/iptables-centos*.tar.gz,*/iptables-centos*.tar.gz.sha256"
+          artifacts: "*/iptables-rockylinux*.tar.gz,*/iptables-rockylinux*.tar.gz.sha256"
